@@ -1,11 +1,22 @@
 from django.db import models
+from django.utils import timezone
+from datetime import datetime, timedelta
 
 # Create your models here.
 
 
 class Question(models.Model):
     question_test = models.CharField('问题内容', max_length=200)
-    pub_data = models.DateField('发布时间')
+    pub_date = models.DateField('发布时间')
+
+    def __str__(self):
+        return self.question_test
+
+    def was_published_recntly(self):
+        if self.pub_date >= timezone.now() - timedelta(days=1):
+            return True
+        else:
+            return False
 
 
 class Choice(models.Model):
@@ -13,6 +24,8 @@ class Choice(models.Model):
     choice_text = models.CharField('选项内容', max_length=200)
     votes = models.IntegerField('投票数', default=0)
 
+    def __str__(self):
+        return self.choice_text
 
 """
 类被翻译为sql执行
